@@ -15,4 +15,5 @@ Project planning artifacts:
 - PRD: [.taskmaster/docs/prd.md](.taskmaster/docs/prd.md)
 - Task graph: [.taskmaster/tasks/tasks.json](.taskmaster/tasks/tasks.json)
 - Architecture blueprint: [docs/architecture/anveyra-pos-saas-mvp-design.md](docs/architecture/anveyra-pos-saas-mvp-design.md)
-
+- Agent guide: [AGENTS.md](AGENTS.md)
+- Planning audit: [docs/architecture/planning-audit-2026-06-16.md](docs/architecture/planning-audit-2026-06-16.md)
