@@ -1,0 +1,747 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Establish monorepo foundation",
+      "description": "Create the Anveyra POS platform repository structure and baseline development conventions.",
+      "details": "Set up apps/mobile-pos, apps/customer-dashboard, apps/internal-admin, services/api, packages/contracts, packages/design-tokens, and docs folders. Add root documentation for local development, environment variables, branch strategy, and quality gates. Keep implementation minimal but ready for Laravel, Flutter, and Next.js scaffolding.",
+      "testStrategy": "Verify expected folders exist, README explains setup direction, and git status contains only intentional foundation files.",
+      "status": "pending",
+      "dependencies": [],
+      "priority": "high",
+      "phase": "FOUNDATION",
+      "complexity": "MEDIUM",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Create repository layout",
+          "description": "Add the platform folder structure for mobile, dashboard, internal admin, API, shared contracts, and docs.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Write root project README",
+          "description": "Document Anveyra POS goals, stack, apps, and local development direction.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 3,
+          "title": "Define quality gates",
+          "description": "Document required lint, test, migration, and sync validation expectations for future work.",
+          "status": "pending",
+          "dependencies": [1]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Design database ERD and migration plan",
+      "description": "Produce the first SaaS data model for tenant, outlet, user, product, stock, transaction, shift, sync, subscription, and audit domains.",
+      "details": "Create docs/database/erd.md and migration notes. Include tenant scoping, primary keys, unique constraints, idempotency keys, indexes, soft deletes, and movement-based stock rules. The ERD must be implementation-ready for Laravel migrations.",
+      "testStrategy": "Review ERD against PRD entity list and confirm every customer-facing entity has tenant scoping or an explicit exception.",
+      "status": "pending",
+      "dependencies": [1],
+      "priority": "high",
+      "phase": "FOUNDATION",
+      "complexity": "COMPLEX",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Map core entities and relationships",
+          "description": "Document Tenant, Outlet, User, Role, Device, Product, Category, Shift, Transaction, Payment, StockMovement, and related tables.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Define constraints and indexes",
+          "description": "Specify tenant-scoped unique keys, sync idempotency keys, report indexes, and FK behavior.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 3,
+          "title": "Document migration order",
+          "description": "Create an implementation order for migrations that avoids circular dependencies and supports seed data.",
+          "status": "pending",
+          "dependencies": [1, 2]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Define API and sync contracts",
+      "description": "Create the REST API contract and sync payload rules for the backend, mobile app, and web apps.",
+      "details": "Write docs/api/openapi-style contract or structured markdown covering auth, device activation, master sync, batch sync, products, stock movements, transactions, shifts, reports, devices, subscriptions, and internal admin APIs. Include request/response examples and error codes.",
+      "testStrategy": "Check that every MVP app has enough endpoint coverage and sync endpoints include per-item ack, dependency_missing, and idempotency behavior.",
+      "status": "pending",
+      "dependencies": [2],
+      "priority": "high",
+      "phase": "FOUNDATION",
+      "complexity": "COMPLEX",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Write auth and device API contract",
+          "description": "Specify login, logout, activation, PIN verify, token, and device state APIs.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Write master data and CRUD contracts",
+          "description": "Specify product, category, user, outlet settings, and stock movement APIs.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 3,
+          "title": "Write sync batch contract",
+          "description": "Define sync item payloads, per-item acknowledgement, idempotency, dependency handling, and retry-safe errors.",
+          "status": "pending",
+          "dependencies": [1, 2]
+        },
+        {
+          "id": 4,
+          "title": "Write reports and internal admin contracts",
+          "description": "Specify report, export, tenant, subscription, support, and audit log endpoints.",
+          "status": "pending",
+          "dependencies": [2]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Scaffold Laravel API service",
+      "description": "Create the Laravel backend app with PostgreSQL, Redis, config, health check, and testing baseline.",
+      "details": "Scaffold services/api with Laravel. Configure environment examples, database connection, Redis, queue driver, API version prefix, test database setup, and initial health endpoint.",
+      "testStrategy": "Run Laravel test suite and verify health endpoint returns OK in local environment.",
+      "status": "pending",
+      "dependencies": [1, 2, 3],
+      "priority": "high",
+      "phase": "BACKEND",
+      "complexity": "MEDIUM",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Install Laravel app",
+          "description": "Create services/api and configure Laravel application baseline.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Configure PostgreSQL and Redis",
+          "description": "Add environment examples and config for database, queue, cache, and rate limiting.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 3,
+          "title": "Add health endpoint and test baseline",
+          "description": "Create /api/v1/health and a passing feature test.",
+          "status": "pending",
+          "dependencies": [1, 2]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Implement backend tenant isolation, auth, and RBAC",
+      "description": "Build backend security foundations for tenant-scoped customer APIs and internal roles.",
+      "details": "Implement Laravel auth, user model, roles, permissions, tenant middleware, request context, and tests that prove tenant_id is derived from token. Include internal user support with tenant_id null where appropriate.",
+      "testStrategy": "Run feature tests for login, permission denial, cross-tenant read/write denial, and internal access audit stub.",
+      "status": "pending",
+      "dependencies": [4],
+      "priority": "high",
+      "phase": "BACKEND",
+      "complexity": "COMPLEX",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Create auth and user migrations",
+          "description": "Add users, roles, permissions, role_permissions, and auth token support.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Add tenant context middleware",
+          "description": "Ensure customer API tenant is always derived from authenticated user/token.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 3,
+          "title": "Implement permission checks",
+          "description": "Add role/permission guard helpers and apply them to protected endpoints.",
+          "status": "pending",
+          "dependencies": [1, 2]
+        },
+        {
+          "id": 4,
+          "title": "Add tenant isolation tests",
+          "description": "Prove tenant A cannot read or write tenant B resources.",
+          "status": "pending",
+          "dependencies": [2, 3]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Implement tenant, outlet, device, and activation backend",
+      "description": "Build the backend flow that creates tenants and lets mobile devices activate against an outlet.",
+      "details": "Implement tenant/outlet migrations, device registration, activation code generation, activation validation, device_install_id handling, device status, revoke/reactivate, and audit events for activation code changes.",
+      "testStrategy": "Feature tests cover valid activation, expired code, reused code, suspended tenant, device status, and idempotent activation behavior.",
+      "status": "pending",
+      "dependencies": [5],
+      "priority": "high",
+      "phase": "BACKEND",
+      "complexity": "COMPLEX",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Create tenant, outlet, and device schema",
+          "description": "Add migrations, models, relationships, and tenant-scoped constraints.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Build activation code endpoints",
+          "description": "Add generate, list, revoke, and activation endpoints with validation.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 3,
+          "title": "Implement device activation rules",
+          "description": "Bind device to outlet, store install identity, and return mobile bootstrap token/settings.",
+          "status": "pending",
+          "dependencies": [2]
+        },
+        {
+          "id": 4,
+          "title": "Test activation edge cases",
+          "description": "Cover invalid, expired, reused, suspended, and idempotent activation cases.",
+          "status": "pending",
+          "dependencies": [2, 3]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Implement product catalog and stock movement backend",
+      "description": "Build product, category, stock movement, import, and master data foundations.",
+      "details": "Implement products, categories, stock_movements, min stock, SKU/barcode uniqueness per tenant, product import job records, and movement-based stock updates. Product stock cache is updated only through movements.",
+      "testStrategy": "Tests cover CRUD, unique SKU/barcode, stock in, adjustment, import movement, low stock query, and tenant scoping.",
+      "status": "pending",
+      "dependencies": [6],
+      "priority": "high",
+      "phase": "BACKEND",
+      "complexity": "COMPLEX",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Create product and category migrations",
+          "description": "Add schema, relationships, soft delete/status rules, and tenant-scoped indexes.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Build product and category APIs",
+          "description": "Implement CRUD endpoints, search/filter, and validation.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 3,
+          "title": "Build stock movement service",
+          "description": "Create stock in, adjustment, sale, void reversal, and import movement logic.",
+          "status": "pending",
+          "dependencies": [1, 2]
+        },
+        {
+          "id": 4,
+          "title": "Add import job foundation",
+          "description": "Implement import job record, validation summary structure, and queued processing hook.",
+          "status": "pending",
+          "dependencies": [2, 3]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Implement backend transaction, payment, shift, and cash models",
+      "description": "Create backend models and services for POS transactions, payments, shifts, cash movements, and voids.",
+      "details": "Implement transaction append-only persistence, payment records, shift open/close, cash movement, void approval, receipt metadata, and stock movement integration. Include provisional/final shift recap behavior.",
+      "testStrategy": "Tests cover shift open, cash in/out, transaction creation, payment separation, void approval, stock reversal, and shift expected cash calculation.",
+      "status": "pending",
+      "dependencies": [7],
+      "priority": "high",
+      "phase": "BACKEND",
+      "complexity": "COMPLEX",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Create transaction and payment schema",
+          "description": "Add transactions, transaction_items, payments, receipt metadata, and status fields.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Create shift and cash schema",
+          "description": "Add shifts, cash_movements, provisional/final recap fields, and local IDs.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 3,
+          "title": "Implement void approval service",
+          "description": "Add void approval, reason, approver permission validation, and reversal movement logic.",
+          "status": "pending",
+          "dependencies": [1, 2]
+        },
+        {
+          "id": 4,
+          "title": "Add money and shift calculation tests",
+          "description": "Verify totals, payment separation, expected cash, actual cash, cash difference, and void behavior.",
+          "status": "pending",
+          "dependencies": [1, 2, 3]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Implement backend sync engine endpoints",
+      "description": "Build idempotent batch sync, master pull, sync logs, dependency handling, and per-item acknowledgements.",
+      "details": "Create sync item processing services for transactions, items, payments, voids, shifts, and cash movements. Store idempotency keys and return previous result on repeat. Use per-item savepoints/transactions so partial failures do not fail the whole batch.",
+      "testStrategy": "Tests cover offline transaction sync, duplicate sync, partial batch success, dependency_missing, retry-safe failures, sync logs, and stock movement creation.",
+      "status": "pending",
+      "dependencies": [8],
+      "priority": "high",
+      "phase": "SYNC",
+      "complexity": "COMPLEX",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Create sync log and idempotency schema",
+          "description": "Add tables for processed sync keys, sync logs, result tracking, and errors.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Build master data pull endpoint",
+          "description": "Implement cursor-based product, category, user, outlet, and subscription sync payload.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 3,
+          "title": "Build batch sync endpoint",
+          "description": "Process transaction, payment, shift, cash, and void items with per-item acknowledgements.",
+          "status": "pending",
+          "dependencies": [1, 2]
+        },
+        {
+          "id": 4,
+          "title": "Test idempotency and dependency cases",
+          "description": "Verify duplicate keys, parent-child dependencies, partial failures, and sync_failed logging.",
+          "status": "pending",
+          "dependencies": [3]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Scaffold Flutter mobile POS app",
+      "description": "Create the new mobile Flutter app with architecture, theme direction, adaptive layout utilities, and local app shell.",
+      "details": "Scaffold apps/mobile-pos as a new Flutter app. Add feature-first structure, routing, design tokens, Indonesian localization baseline, phone/tablet breakpoints, and initial route screens for activation, PIN, shift, POS, payment, history, sync center, and settings.",
+      "testStrategy": "Run Flutter analyze and widget smoke tests for routing, theme, and adaptive shell on phone/tablet constraints.",
+      "status": "pending",
+      "dependencies": [1, 3],
+      "priority": "high",
+      "phase": "MOBILE",
+      "complexity": "MEDIUM",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Create Flutter project and app structure",
+          "description": "Scaffold apps/mobile-pos with feature folders, core folders, and base routing.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Add Anveyra mobile design tokens",
+          "description": "Define navy, green, surfaces, typography, spacing, and touch target defaults from the mobile template direction.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 3,
+          "title": "Add adaptive shell",
+          "description": "Implement phone and tablet layout primitives for cashier flows.",
+          "status": "pending",
+          "dependencies": [1, 2]
+        },
+        {
+          "id": 4,
+          "title": "Add localization baseline",
+          "description": "Configure Bahasa Indonesia labels for all MVP shell screens and common states.",
+          "status": "pending",
+          "dependencies": [1]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "Implement mobile local database and sync queue",
+      "description": "Build the Drift SQLite schema for offline master data, shifts, transactions, payments, cash movements, stock movements, and sync queue.",
+      "details": "Model mobile-local data around SaaS sync identities, not the legacy local POS schema. Add repositories for local master data, active shift, cart persistence, transaction save, sync queue, and sync metadata.",
+      "testStrategy": "Run unit tests for database creation, transaction save, queue status transitions, and local data preservation after simulated sync failure.",
+      "status": "pending",
+      "dependencies": [3, 10],
+      "priority": "high",
+      "phase": "MOBILE",
+      "complexity": "COMPLEX",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Define Drift schema",
+          "description": "Add local tables for master data, auth/device state, shifts, transactions, payments, stock, and sync queue.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Implement local repositories",
+          "description": "Add repository/data source classes for master data, shifts, transactions, and sync queue.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 3,
+          "title": "Add sync queue state machine",
+          "description": "Implement pending, syncing, synced, sync_failed, and dependency_missing transitions.",
+          "status": "pending",
+          "dependencies": [1, 2]
+        },
+        {
+          "id": 4,
+          "title": "Test local persistence guarantees",
+          "description": "Verify failed sync never deletes local transaction data and retry only changes queue state.",
+          "status": "pending",
+          "dependencies": [1, 2, 3]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Implement mobile activation, initial sync, PIN login, and subscription gate",
+      "description": "Build the first-run and daily access flow for activated devices and offline cashier login.",
+      "details": "Implement Hubungkan Perangkat, initial sync, secure token storage, local user/PIN hash storage, PIN login, lockout, shift gate, subscription valid_until caching, and grace/suspended behavior.",
+      "testStrategy": "Widget/unit tests cover activation success/failure, initial sync retry, offline PIN login, lockout, expired grace, suspended block, and shift gate behavior.",
+      "status": "pending",
+      "dependencies": [6, 9, 10, 11],
+      "priority": "high",
+      "phase": "MOBILE",
+      "complexity": "COMPLEX",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Build activation screen and API client",
+          "description": "Connect activation code flow to backend and persist device/token state.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Build initial sync flow",
+          "description": "Download master data, show progress, handle retry, and save sync cursor.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 3,
+          "title": "Build PIN login flow",
+          "description": "Implement user selection, keypad, hash verification, offline login, and lockout.",
+          "status": "pending",
+          "dependencies": [2]
+        },
+        {
+          "id": 4,
+          "title": "Build subscription and shift gate",
+          "description": "Block/allow shift opening based on local subscription status, grace rules, and server time cache.",
+          "status": "pending",
+          "dependencies": [2, 3]
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "title": "Implement mobile shift, catalog, cart, and payments",
+      "description": "Build the core cashier flow from opening a shift through local transaction completion.",
+      "details": "Implement Buka Shift, Home POS, search, category, barcode scan, cart, item qty, discount, notes, cash payment, QRIS manual confirmation, transfer confirmation, transaction success, and local transaction save with pending sync queue item.",
+      "testStrategy": "Widget and domain tests cover open shift, add item, scan/search, totals, discounts, cash change, QRIS warning, transfer reference requirement, local transaction save, and pending sync badge.",
+      "status": "pending",
+      "dependencies": [11, 12],
+      "priority": "high",
+      "phase": "MOBILE",
+      "complexity": "COMPLEX",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Build open shift and active shift UI",
+          "description": "Implement kas awal, active shift state, and block POS when shift is missing.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Build adaptive POS catalog and cart",
+          "description": "Implement tablet split layout and phone bottom-sheet cart layout.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 3,
+          "title": "Build barcode/search and stock warnings",
+          "description": "Implement scanner, search, not-found fallback, low stock, and negative stock warnings.",
+          "status": "pending",
+          "dependencies": [2]
+        },
+        {
+          "id": 4,
+          "title": "Build payment and local transaction save",
+          "description": "Implement cash, QRIS manual, transfer, success screen, local save, stock local movement, and queue insert.",
+          "status": "pending",
+          "dependencies": [2, 3]
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Implement mobile sync center, history, void, and close shift",
+      "description": "Build the mobile operational tools around completed transactions and pending sync.",
+      "details": "Implement transaction history, transaction detail, status badges, void approval, cash in/out, close shift, provisional recap warning, sync center, retry, pending threshold warning, and failed sync detail.",
+      "testStrategy": "Tests cover history filtering, void permission flow, cash in/out note requirement, close shift calculation, provisional status, sync retry status changes, and pending threshold warning.",
+      "status": "pending",
+      "dependencies": [9, 13],
+      "priority": "high",
+      "phase": "MOBILE",
+      "complexity": "COMPLEX",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Build history and transaction detail",
+          "description": "Show local transactions with sync status, void status, payment, and receipt actions.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Build void approval flow",
+          "description": "Require reason and approver PIN, then create local void event and reversal queue item.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 3,
+          "title": "Build cash movement and close shift",
+          "description": "Implement kas masuk/keluar, close shift recap, expected cash, actual cash, and difference.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 4,
+          "title": "Build sync center",
+          "description": "Display pending, failed, retry, last sync, threshold warnings, and calm offline copy.",
+          "status": "pending",
+          "dependencies": [1, 2, 3]
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "title": "Implement customer dashboard MVP",
+      "description": "Build the Next.js customer dashboard for reports, products, stock, users, settings, devices, and subscription view.",
+      "details": "Scaffold apps/customer-dashboard. Implement login, dashboard summary, transaction report, product/category CRUD, import flow, stock movement view, user/PIN management, outlet settings, QRIS/bank settings, device activation code, and subscription status.",
+      "testStrategy": "Run dashboard lint/tests and manually verify core pages against API fixtures with tenant-scoped data.",
+      "status": "pending",
+      "dependencies": [7, 8, 9],
+      "priority": "medium",
+      "phase": "WEB",
+      "complexity": "COMPLEX",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Scaffold dashboard app",
+          "description": "Create Next.js app, auth shell, layout, route groups, and API client.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Build report pages",
+          "description": "Implement sales dashboard, transaction report/detail, shift report, and export entry points.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 3,
+          "title": "Build product and stock pages",
+          "description": "Implement product/category CRUD, import, stock movement, and adjustment screens.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 4,
+          "title": "Build user, settings, device, and subscription pages",
+          "description": "Implement user/PIN management, outlet receipt/QRIS/bank settings, activation code, and subscription view.",
+          "status": "pending",
+          "dependencies": [1]
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "title": "Implement internal admin MVP",
+      "description": "Build the lean internal admin for tenant, subscription, support troubleshooting, device sync monitor, and audit logs.",
+      "details": "Scaffold apps/internal-admin. Implement internal auth, tenant list/detail, tenant status, manual subscription management, support read-only summary, device sync monitor, and audit log filters. Keep advanced internal analytics out of MVP.",
+      "testStrategy": "Run admin lint/tests and verify support role cannot mutate transaction data while all support access writes audit entries.",
+      "status": "pending",
+      "dependencies": [5, 6, 9],
+      "priority": "medium",
+      "phase": "WEB",
+      "complexity": "MEDIUM",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Scaffold internal admin app",
+          "description": "Create Next.js app, internal auth layout, API client, and role-aware navigation.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Build tenant and subscription screens",
+          "description": "Implement tenant list/detail, status changes, and manual subscription updates.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 3,
+          "title": "Build support and sync monitor screens",
+          "description": "Implement read-only tenant summary, device pending counts, last sync, and sync error details.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 4,
+          "title": "Build audit log screen",
+          "description": "Implement searchable audit log and verify sensitive internal actions are recorded.",
+          "status": "pending",
+          "dependencies": [1, 2, 3]
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "title": "Implement receipt printing and sharing",
+      "description": "Add thermal receipt output and shareable receipt support without making print failure affect transaction success.",
+      "details": "Implement receipt domain contract, mobile rendering, Bluetooth printer integration or staged adapter, reprint from history, print failed state, and shareable receipt output. Receipt uses transaction snapshots, not product master.",
+      "testStrategy": "Tests verify receipt totals, payment details, snapshot labels, reprint from history, and that print failure leaves transaction completed.",
+      "status": "pending",
+      "dependencies": [13, 14],
+      "priority": "medium",
+      "phase": "MOBILE",
+      "complexity": "MEDIUM",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Define receipt model and layout",
+          "description": "Create receipt structure for 58mm/80mm output and digital share format.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Implement print adapter",
+          "description": "Add Bluetooth printer integration or adapter abstraction ready for device testing.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 3,
+          "title": "Implement share and reprint",
+          "description": "Allow receipt sharing and reprinting from transaction history.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 4,
+          "title": "Test print failure behavior",
+          "description": "Verify failed printing never rolls back or changes transaction status.",
+          "status": "pending",
+          "dependencies": [2, 3]
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "title": "Run MVP QA, UAT, and launch readiness",
+      "description": "Validate the complete platform against PRD acceptance criteria and prepare beta merchant launch.",
+      "details": "Create automated and manual QA runs for offline, sync, tenant isolation, shift, void, stock, subscription, mobile layouts, dashboard reports, internal admin support, and printer behavior. Prepare beta onboarding checklist and launch documentation.",
+      "testStrategy": "All PRD acceptance criteria pass in documented QA evidence; beta readiness checklist is complete before launch.",
+      "status": "pending",
+      "dependencies": [9, 14, 15, 16, 17],
+      "priority": "high",
+      "phase": "VALIDATION",
+      "complexity": "VALIDATION",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Create QA test matrix",
+          "description": "Map PRD acceptance criteria to automated tests, manual tests, and UAT scenarios.",
+          "status": "pending",
+          "dependencies": []
+        },
+        {
+          "id": 2,
+          "title": "Run end-to-end sync scenarios",
+          "description": "Validate online, offline, failed, duplicate, partial batch, void dependency, and stock negative flows.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 3,
+          "title": "Run cross-platform workflow tests",
+          "description": "Verify mobile, dashboard, and internal admin workflows against the same tenant data.",
+          "status": "pending",
+          "dependencies": [1]
+        },
+        {
+          "id": 4,
+          "title": "Prepare beta launch assets",
+          "description": "Create merchant onboarding checklist, support runbook, known limitations, and release notes.",
+          "status": "pending",
+          "dependencies": [1, 2, 3]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "projectName": "Anveyra POS",
+    "prdPath": ".taskmaster/docs/prd.md",
+    "createdAt": "2026-06-16",
+    "mode": "native-manual",
+    "taskCount": 18,
+    "notes": "Generated manually because prd-taskmaster script.py depends on Unix fcntl and failed on Windows."
+  }
+}
